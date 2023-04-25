@@ -1,28 +1,32 @@
-import {useState, useRef} from "react";
+import {useState, useRef, useCallback} from "react";
 import classes from "./Table.module.css";
-import TableRow from "./component/TableRow/TableRow";
+import MemoizedTableRow from "./component/TableRow/TableRow";
+import { texts } from "./utils/texts.js";
+import colors from "./utils/colors";
 
 function Table({issues}) {
+    //Optimization was performed and some variables were exported from the component and the same data was exported in one change.
+    const arrayIssues =  new Array(issues.length).fill({
+            checked: false,
+            backgroundColor: colors.ffffff
+        });
     const globalCheckboxRef = useRef(null);
     const [issuesState, setIssuesState] = useState(
-        new Array(issues.length).fill({
-            checked: false,
-            backgroundColor: "#ffffff"
-        })
+       arrayIssues
     );
-    
+
     const [globalSelectDeselectIsChecked, setGlobalSelectDeselectIsChecked] = useState(
         false
     );
     const [countRowsSelected, setCountRowsSelected] = useState(0);
 
-    const handleChange = (position) => {
+    const handleChange = useCallback((position) => {
         const updatedIssuesState = issuesState.map((element, index) => {
             if (position === index) {
                 return {
                     ...element,
                     checked: !element.checked,
-                    backgroundColor: element.checked ? "#ffffff" : "#eeeeee"
+                    backgroundColor: element.checked ? colors.ffffff : "#eeeeee"
                 };
             }
             return element;
@@ -40,15 +44,15 @@ function Table({issues}) {
         setCountRowsSelected(total);
 
         handleGlobalCheckbox(total);
-    };
+    }, [issuesState]);
 
-    const handleGlobalCheckbox = (total) => {
+    const handleGlobalCheckbox = useCallback((total) => {
         //Using useRef for document.getElementById can be replaced with using ref to avoid searching for DOM elements on every state change.
         const globalCheckbox = globalCheckboxRef.current;
         let count = 0;
 
         issues.forEach((element) => {
-            if (element.status === "open") {
+            if (element.status === texts.open) {
                 count += 1;
             }
         });
@@ -65,37 +69,33 @@ function Table({issues}) {
             globalCheckbox.indeterminate = false;
             setGlobalSelectDeselectIsChecked(true);
         }
-    };
+    }, []);
 
-    const handleGlobalSelect = (event) => {
+    const handleGlobalSelect = useCallback((event) => {
         let {checked} = event.target;
 
         const checkedIssues = [];
         issues.forEach((element) => {
-            if (element.status === "open") {
-                checkedIssues.push({checked: true, backgroundColor: "#eeeeee"});
+            if (element.status === texts.open) {
+                checkedIssues.push({checked: true, backgroundColor: colors.eeeeee});
             } else {
-                checkedIssues.push({checked: false, backgroundColor: "#ffffff"});
+                checkedIssues.push({checked: false, backgroundColor: colors.ffffff});
             }
         });
 
-        const uncheckedIssues = new Array(issues.length).fill({
-            checked: false,
-            backgroundColor: "#ffffff"
-        });
-        checked ? setIssuesState(checkedIssues) : setIssuesState(uncheckedIssues);
+        checked ? setIssuesState(checkedIssues) : setIssuesState(arrayIssues);
 
-        const totalSelected = (checked ? checkedIssues : uncheckedIssues)
+        const totalSelected = (checked ? checkedIssues : arrayIssues)
             .map((element) => element.checked)
             .reduce((sum, currentState, index) => {
-                if (currentState && issues[index].status === "open") {
+                if (currentState && issues[index].status === texts.open) {
                     return sum + issues[index].value;
                 }
                 return sum;
             }, 0);
         setCountRowsSelected(totalSelected);
         setGlobalSelectDeselectIsChecked((prevState) => !prevState);
-    };
+    }, [issues, issuesState]);
 
     return (
         <table className={classes.table}>
@@ -105,30 +105,29 @@ function Table({issues}) {
                     <input
                         ref={globalCheckboxRef}
                         className={classes.checkbox}
-                        type={"checkbox"}
-                        id={"custom-checkbox-selectDeselectAll"}
-                        name={"custom-checkbox-selectDeselectAll"}
-                        value={"custom-checkbox-selectDeselectAll"}
+                        type={texts.checkbox}
+                        name={texts.customCheckboxSelectDeselectAll}
+                        value={texts.customCheckboxSelectDeselectAll}
                         checked={globalSelectDeselectIsChecked}
                         onChange={handleGlobalSelect}
                     />
                 </th>
                 <th className={classes.numChecked}>
                     {countRowsSelected
-                        ? `Selected ${countRowsSelected}`
-                        : "Nothing selected"}
+                        ? `${texts.selected} ${countRowsSelected}`
+                        : texts.nothingSelected}
                 </th>
             </tr>
             <tr>
                 <th/>
-                <th>Name</th>
-                <th>Message</th>
-                <th>Status</th>
+                <th>{texts.name}</th>
+                <th>{texts.message}</th>
+                <th>{texts.status}</th>
             </tr>
             </thead>
 
             <tbody>
-            {issues.map((issues, index) => <TableRow 
+            {issues.map((issues, index) => <MemoizedTableRow 
             issues={issues} index={index}
              key={index} issuesState={issuesState}
              handle={() => handleChange(index)}/>

@@ -1,7 +1,7 @@
-
+import React from "react";
 import classes from "./TableRow.module.css";
 
-const TableRow = ({issues, index, issuesState, handle}) => {
+ function TableRow ({issues, index, issuesState, handle}) {
     //A piece of code was moved and a component was made for better perception.
                 let issueIsOpen = issues.status === "open";
                 let handler = issueIsOpen ? () => handle() : null;
@@ -48,4 +48,6 @@ const TableRow = ({issues, index, issuesState, handle}) => {
                 );
 }
 
-export default TableRow;
+ const MemoizedTableRow = React.memo(TableRow);
+
+export default MemoizedTableRow;
