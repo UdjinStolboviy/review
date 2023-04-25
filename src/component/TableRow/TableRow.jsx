@@ -2,6 +2,7 @@
 import classes from "./TableRow.module.css";
 
 const TableRow = ({issues, index, issuesState, handle}) => {
+    //A piece of code was moved and a component was made for better perception.
                 let issueIsOpen = issues.status === "open";
                 let handler = issueIsOpen ? () => handle() : null;
                 let stylesTr = issueIsOpen

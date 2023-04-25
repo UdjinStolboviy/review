@@ -1,14 +1,16 @@
-import {useState} from "react";
+import {useState, useRef} from "react";
 import classes from "./Table.module.css";
 import TableRow from "./component/TableRow/TableRow";
 
 function Table({issues}) {
+    const globalCheckboxRef = useRef(null);
     const [issuesState, setIssuesState] = useState(
         new Array(issues.length).fill({
             checked: false,
             backgroundColor: "#ffffff"
         })
     );
+    
     const [globalSelectDeselectIsChecked, setGlobalSelectDeselectIsChecked] = useState(
         false
     );
@@ -41,9 +43,8 @@ function Table({issues}) {
     };
 
     const handleGlobalCheckbox = (total) => {
-        const globalCheckbox = document.getElementById(
-            "custom-checkbox-selectDeselectAll"
-        );
+        //Using useRef for document.getElementById can be replaced with using ref to avoid searching for DOM elements on every state change.
+        const globalCheckbox = globalCheckboxRef.current;
         let count = 0;
 
         issues.forEach((element) => {
@@ -102,6 +103,7 @@ function Table({issues}) {
             <tr>
                 <th>
                     <input
+                        ref={globalCheckboxRef}
                         className={classes.checkbox}
                         type={"checkbox"}
                         id={"custom-checkbox-selectDeselectAll"}
