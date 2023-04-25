@@ -1,5 +1,6 @@
 import {useState} from "react";
 import classes from "./Table.module.css";
+import TableRow from "./component/TableRow/TableRow";
 
 function Table({issues}) {
     const [issuesState, setIssuesState] = useState(
@@ -125,51 +126,11 @@ function Table({issues}) {
             </thead>
 
             <tbody>
-            {issues.map(({name, message, status}, index) => {
-                let issueIsOpen = status === "open";
-                let handler = issueIsOpen ? () => handleChange(index) : null;
-                let stylesTr = issueIsOpen
-                    ? classes.openIssue
-                    : classes.resolvedIssue;
-
-                return (
-                    <tr
-                        className={stylesTr}
-                        style={issuesState[index]}
-                        key={index}
-                        onClick={handler}
-                    >
-                        <td>
-                            {issueIsOpen ? (
-                                <input
-                                    className={classes.checkbox}
-                                    type={"checkbox"}
-                                    id={`custom-checkbox-${index}`}
-                                    name={name}
-                                    value={name}
-                                    checked={issuesState[index].checked}
-                                    onChange={() => handleChange(index)}
-                                />
-                            ) : (
-                                <input
-                                    className={classes.checkbox}
-                                    type={"checkbox"}
-                                    disabled
-                                />
-                            )}
-                        </td>
-                        <td>{name}</td>
-                        <td>{message}</td>
-                        <td>
-                            {issueIsOpen ? (
-                                <span className={classes.greenCircle}/>
-                            ) : (
-                                <span className={classes.redCircle}/>
-                            )}
-                        </td>
-                    </tr>
-                );
-            })}
+            {issues.map((issues, index) => <TableRow 
+            issues={issues} index={index}
+             key={index} issuesState={issuesState}
+             handle={() => handleChange(index)}/>
+            )}
             </tbody>
         </table>
     );
