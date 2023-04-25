@@ -1,0 +1,56 @@
+[
+  {
+    "id": "63838446-9767-404c-85f9-c07503ff616c",
+    "name": "TypeError",
+    "message": "Cannot read properties of undefined (reading 'length')",
+    "status": "open",
+    "numEvents": 105,
+    "numUsers": 56,
+    "value": 1
+  },
+  {
+    "id": "b13051e5-aa96-4d45-bac9-708849027623",
+    "name": "TypeError",
+    "message": "U is not a function",
+    "status": "resolved",
+    "numEvents": 45,
+    "numUsers": 34,
+    "value": 1
+  },
+  {
+    "id": "e50bf8ab-6f57-4736-8dc5-b32828916346",
+    "name": "TypeError",
+    "message": "can't define property F: \"obj\" is not extensible",
+    "status": "open",
+    "numEvents": 31,
+    "numUsers": 21,
+    "value": 1
+  },
+  {
+    "id": "e50195d2-c153-4110-802a-4893c161be26",
+    "name": "TypeError",
+    "message": "setting getter-only property R",
+    "status": "open",
+    "numEvents": 26,
+    "numUsers": 24,
+    "value": 1
+  },
+  {
+    "id": "64e60c18-f77d-4c8e-a46c-79fb2fbcdc91",
+    "name": "ReferenceError",
+    "message": "C is not defined",
+    "status": "open",
+    "numEvents": 12,
+    "numUsers": 11,
+    "value": 1
+  },
+  {
+    "id": "\n5129a986-aef0-42a0-af54-c23691f533fd",
+    "name": "SyntaxError",
+    "message": "missing name after . operator",
+    "status": "resolved",
+    "numEvents": 15,
+    "numUsers": 13,
+    "value": 1
+  }
+]
